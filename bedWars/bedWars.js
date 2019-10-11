@@ -4,9 +4,15 @@ exports.bedWarRules = function () {
   var block;
   var teamColor;
   self.removeMetadata ("teamcolor", __plugin );
+  events.projectileHit( function (event) {
+    event.entity.world.createExplosion (event.entity.location,1);
+  });
   events.blockBreak( function (event) {
     block=event.block;
     if ((block.getType().toString().indexOf ( 'BED') > -1)){
+      org.bukkit.Bukkit.dispatchCommand(org.bukkit.Bukkit.getConsoleSender(), "tellraw @a [\"" + block.getType().toString() + " Destroyed\"]");
+    }
+    else if ((block.getType().toString().indexOf ( 'WOOL') > -1)){
       org.bukkit.Bukkit.dispatchCommand(org.bukkit.Bukkit.getConsoleSender(), "tellraw @a [\"" + block.getType().toString() + " Destroyed\"]");
     }
     else {
@@ -54,6 +60,7 @@ exports.bedWarRespawn  = function (player) {
     if ((block.getType().toString().indexOf ( 'BED') > -1)){
       player.setGameMode(org.bukkit.GameMode.SURVIVAL);
       player.inventory.addItem (new org.bukkit.inventory.ItemStack (org.bukkit.Material.WHITE_WOOL,32));
+      player.inventory.addItem (new org.bukkit.inventory.ItemStack (org.bukkit.Material.SNOWBALL,32));
       eval ("color = org.bukkit.Color." + teamColor.toUpperCase());
       var player = player;
       var items = require ('items');
